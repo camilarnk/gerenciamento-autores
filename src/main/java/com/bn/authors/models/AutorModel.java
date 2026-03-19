@@ -21,6 +21,8 @@ public class AutorModel {
     @Column(name = "data_nascimento_autor")
     private LocalDate dataNascimento;
 
+    public AutorModel() {}
+
     public Long getId() {
         return id;
     }
