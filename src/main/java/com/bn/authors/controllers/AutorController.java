@@ -2,7 +2,6 @@ package com.bn.authors.controllers;
 
 import com.bn.authors.models.AutorModel;
 import com.bn.authors.services.AutorService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,15 +34,26 @@ public class AutorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<AutorModel>> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<AutorModel> buscarPorId(@PathVariable Long id) {
         Optional<AutorModel> request = autorService.buscarPorId(id);
-        return ResponseEntity.ok().body(request);
+
+        if(request.isPresent()) {
+            return ResponseEntity.ok(request.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletarAutor(@PathVariable Long id) {
-        autorService.deletarAutor(id);
-        return ResponseEntity.noContent().build();
+        Optional<AutorModel> request = autorService.buscarPorId(id);
+
+        if(request.isPresent()) {
+            autorService.deletarAutor(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
